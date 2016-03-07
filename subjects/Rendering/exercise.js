@@ -16,26 +16,41 @@ import React from 'react'
 import { render } from 'react-dom'
 import sortBy from 'sort-by'
 
-const DATA = {
-  title: 'Menu',
-  items: [
-    { id: 1, name: 'tacos', type: 'mexican' },
-    { id: 2, name: 'burrito', type: 'mexican' },
-    { id: 3, name: 'tostada', type: 'mexican' },
-    { id: 4, name: 'mushy peas', type: 'english' },
-    { id: 5, name: 'fish and chips', type: 'english' },
-    { id: 6, name: 'black pudding', type: 'english' }
-  ]
-}
 
 function Menu() {
-  return (
-    <div>
-      Open the console, you have failing tests.
-    </div>
-  )
+    const filteredItems = DATA.items.filter((item) => item.type == 'mexican');
+
+
+    const sortedItems = filteredItems.sort(sortBy('name'));
+    const items = sortedItems.map((item) => {
+        return <li key={item.id}>{item.name}</li>
+    })
+
+    return (
+        <div>
+            <select>
+                <option>mexican</option>
+                <option>english</option>
+            </select>
+            <h1>{DATA.title}</h1>
+            <ul>{items}</ul>
+            Open the console, you have failing tests
+        </div>
+    )
 }
 
-render(<Menu/>, document.getElementById('app'), () => {
-  require('./tests').run()
+const DATA = {
+    title: 'Menu',
+    items: [
+        {id: 1, name: 'tacos', type: 'mexican'},
+        {id: 2, name: 'burrito', type: 'mexican'},
+        {id: 3, name: 'tostada', type: 'mexican'},
+        {id: 4, name: 'mushy peas', type: 'english'},
+        {id: 5, name: 'fish and chips', type: 'english'},
+        {id: 6, name: 'black pudding', type: 'english'}
+    ]
+}
+
+render(<Menu/>, document.getElementById('app'), function () {
+    require('./tests').run()
 })

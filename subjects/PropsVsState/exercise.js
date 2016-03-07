@@ -19,71 +19,84 @@ import React from 'react'
 import { render } from 'react-dom'
 import * as styles from './lib/styles'
 import data from './lib/data'
+const { arrayOf, array, string, number, shape, func } = React.PropTypes
 
 const Tabs = React.createClass({
-  propTypes: {
-    data: React.PropTypes.array.isRequired
-  },
+    propTypes: {
+        data: array.isRequired,
+        onActivateTab: func
+    },
 
-  getInitialState() {
-    return {
-      activeTabIndex: 0
+    handleTabClick(activeTabIndex) {
+        this.props.onActivateTab(activeTabIndex)
+    },
+
+    renderTabs() {
+        return this.props.data.map((tab, index) => {
+            const style = this.props.activeTabIndex === index ?
+                styles.activeTab : styles.tab
+            return (
+                <div
+                    className="Tab"
+                    key={tab.name}
+                    style={style}
+                    onClick={() => this.handleTabClick(index)}
+                >{tab.name}</div>
+            )
+        })
+    },
+
+    renderPanel() {
+        const tab = this.props.data[this.props.activeTabIndex]
+        return (
+            <div>
+                <p>{tab.description}</p>
+            </div>
+        )
+    },
+
+    render() {
+        return (
+            <div style={styles.app}>
+                <div style={styles.tabs}>
+                    {this.renderTabs()}
+                </div>
+                <div style={styles.tabPanels}>
+                    {this.renderPanel()}
+                </div>
+            </div>
+        )
     }
-  },
 
-  handleTabClick(activeTabIndex) {
-    this.setState({ activeTabIndex })
-  },
-
-  renderTabs() {
-    return this.props.data.map((tab, index) => {
-      const style = this.state.activeTabIndex === index ?
-        styles.activeTab : styles.tab
-      return (
-        <div
-          className="Tab"
-          key={tab.name}
-          style={style}
-          onClick={() => this.handleTabClick(index)}
-        >{tab.name}</div>
-      )
-    })
-  },
-
-  renderPanel() {
-    const tab = this.props.data[this.state.activeTabIndex]
-    return (
-      <div>
-        <p>{tab.description}</p>
-      </div>
-    )
-  },
-
-  render() {
-    return (
-      <div style={styles.app}>
-        <div style={styles.tabs}>
-          {this.renderTabs()}
-        </div>
-        <div style={styles.tabPanels}>
-          {this.renderPanel()}
-        </div>
-      </div>
-    )
-  }
 })
 
 const App = React.createClass({
-  render() {
-    return (
-      <div>
-        <h1>Props v. State</h1>
-        <Tabs ref="tabs" data={this.props.tabs}/>
-      </div>
-    )
-  }
+    getInitialState() {
+        return {
+            activeTabIndex: 1
+        }
+    },
+
+    handleActiveTab(activeTabIndex) {
+        this.setState({activeTabIndex})
+    },
+
+
+    render() {
+        return (
+            <div>
+                <pre>{JSON.stringify(this.state, null, 2)}</pre>
+                <h1>Props v. State</h1>
+                <Tabs ref="tabs"
+                      activeTabIndex={this.state.activeTabIndex}
+                      onActivateTab={this.handleActiveTab}
+                      data={this.props.tabs}/>
+            </div>
+        )
+    }
+
 })
 
 render(<App tabs={data}/>, document.getElementById('app'), function () {
-  require('./tests').run(this)
+    //require('./tests').run(this)
 })

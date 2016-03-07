@@ -20,38 +20,114 @@ import React from 'react'
 import { render } from 'react-dom'
 import serializeForm from 'form-serialize'
 
+const StateInput = React.createClass({
+    render() {
+        <label>Shipping State: <input type="text"
+                                      defaultValue={shippingMatchesBilling ? billingState : shippingState}
+                                      disabled={shippingMatchesBilling}
+                                      onBlur={(e) => this.validateState(e.target.value)}
+                                      size="2"/></label>
+
+    }
+})
+
 const CheckoutForm = React.createClass({
-  render() {
-    return (
-      <div>
-        <h1>Checkout</h1>
-        <form>
-          <fieldset>
-            <legend>Billing Address</legend>
-            <p>
-              <label>Billing Name: <input type="text"/></label>
-            </p>
-            <p>
-              <label>Billing State: <input type="text" size="2"/></label>
-            </p>
-          </fieldset>
+    getInitialState() {
+        return {
+            billingName: 'Jane Doe',
+            billingState: 'WA',
+            shippingName: '',
+            shippingState: '',
+            error: false,
+            shippingMatchesBilling: true
+        }
+    },
 
-          <br/>
+    checkedBox(event) {
+        console.log(event.target.checked)
+        this.setState({
+                shippingMatchesBilling: event.target.checked
+            }
+        )
+    },
 
-          <fieldset>
-            <label><input type="checkbox"/> Same as billing</label>
-            <legend>Shipping Address</legend>
-            <p>
-              <label>Shipping Name: <input type="text"/></label>
-            </p>
-            <p>
-              <label>Shipping State: <input type="text" size="2"/></label>
-            </p>
-          </fieldset>
-        </form>
-      </div>
-    )
-  }
+    validateState(myState) {
+        this.setState({
+            shippingState: myState,
+            //error: myState.trim().length !== 2
+        })
+    },
+
+    validateState(myState) {
+        this.setState({
+            error: myState.trim().length !== 2
+        })
+    },
+
+
+    render() {
+        const {billingName,
+            billingState,
+            shippingName,
+            shippingState,
+            shippingMatchesBilling} = this.state
+
+        return (
+            <div>
+                <h1>Checkout</h1>
+                <form>
+                    <fieldset>
+                        <legend>Billing Address</legend>
+                        <p>
+                            <label>Billing Name:{' '}
+                                <input
+                                    type="text"
+                                    value={billingName}
+                                    onChange={(e) => this.setState({billingName:e.target.value})}
+                                />
+                            </label>
+                        </p>
+                        <p>
+                            <label>Billing State: <input type="text"
+                                                         value={billingState}
+                                                         onChange={(e) => this.setState({billingState:e.target.value})}
+                                                         size="2"/>
+                            </label>
+                        </p>
+                    </fieldset>
+
+                    <br/>
+
+                    <fieldset>
+                        <label><input type="checkbox"
+                                      defaultChecked={shippingMatchesBilling}
+                                      onChange={this.checkedBox}/> Same as billing</label>
+                        <legend>Shipping Address</legend>
+                        <p>
+                            <label>Shipping Name: <input type="text"
+                                                         value={shippingMatchesBilling ? billingName : shippingName}
+                                                         disabled={shippingMatchesBilling}
+                                                         onChange={(e) => this.setState({shippingName:e.target.value})}/>
+                            </label>
+                        </p>
+                        <p>
+                            <label>Shipping State: <input type="text"
+                                                          defaultValue={shippingMatchesBilling ? billingState : shippingState}
+                                                          value={shippingMatchesBilling ? billingState : shippingState}
+                                                          disabled={shippingMatchesBilling}
+                                                          onBlur={(e)=>this.validateState(e.target.value)}
+                                                          onChange={(e) => this.setState({shippingState: e.target.value})}
+                                                          size="2"/></label>
+
+
+                        </p>
+                        {this.state.error && (<p>State must be 2 characters</p>)}
+                    </fieldset>
+                </form>
+                <pre>{JSON.stringify(this.state, null, 2)}</pre>
+            </div>
+        )
+    }
 })
 
 render(<CheckoutForm/>, document.getElementById('app'))

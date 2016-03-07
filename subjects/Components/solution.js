@@ -55,9 +55,7 @@ const Tabs = React.createClass({
     }
   },
   selectTabIndex(activeTabIndex) {
-    this.setState({
-      activeTabIndex
-    })
+    this.setState({ activeTabIndex })
   },
   render() {
     const { data } = this.props

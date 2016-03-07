@@ -19,81 +19,93 @@ import { login, sendMessage, subscribeToMessages } from './utils/ChatUtils'
 import './styles'
 
 /*
-Here's how to use the ChatUtils:
+ Here's how to use the ChatUtils:
 
-login((error, auth) => {
-  // hopefully the error is `null` and you have a auth.github object
-})
+ login((error, auth) => {
+ // hopefully the error is `null` and you have a auth.github object
+ })
 
-sendMessage(
-  auth.uid,                       // the auth.uid string
-  auth.github.username,           // the username
-  auth.github.profileImageURL,    // the user's profile image
-  'hello, this is a message'      // the text of the message
-)
+ sendMessage(
+ auth.uid,                       // the auth.uid string
+ auth.github.username,           // the username
+ auth.github.profileImageURL,    // the user's profile image
+ 'hello, this is a message'      // the text of the message
+ )
 
-const unsubscribe = subscribeToMessages(messages => {
-  // here are your messages as an array, it will be called
-  // every time the messages change
-})
+ const unsubscribe = subscribeToMessages(messages => {
+ // here are your messages as an array, it will be called
+ // every time the messages change
+ })
 
-unsubscribe() // stop listening for new messages
+ unsubscribe() // stop listening for new messages
 
-The world is your oyster!
-*/
+ The world is your oyster!
+ */
 
 const Chat = React.createClass({
-  render() {
-    return (
-      <div className="chat">
-        <header className="chat-header">
-          <h1 className="chat-title">HipReact</h1>
-          <p className="chat-message-count"># messages: 3</p>
-        </header>
-        <div className="messages">
-          <ol className="message-groups">
-            <li className="message-group">
-              <div className="message-group-avatar">
-                <img src="https://avatars1.githubusercontent.com/u/92839"/>
-              </div>
-              <ol className="messages">
-                <li className="message">So, check it out:</li>
-                <li className="message">QA Engineer walks into a bar.</li>
-                <li className="message">Orders a beer.</li>
-                <li className="message">Orders 0 beers.</li>
-                <li className="message">Orders 999999999 beers.</li>
-                <li className="message">Orders a lizard.</li>
-                <li className="message">Orders -1 beers.</li>
-                <li className="message">Orders a sfdeljknesv.</li>
-              </ol>
-            </li>
-            <li className="message-group">
-              <div className="message-group-avatar">
-                <img src="https://avatars2.githubusercontent.com/u/100200"/>
-              </div>
-              <ol className="messages">
-                <li className="message">Haha</li>
-                <li className="message">Stop stealing other people's jokes :P</li>
-              </ol>
-            </li>
-            <li className="message-group">
-              <div className="message-group-avatar">
-                <img src="https://avatars1.githubusercontent.com/u/92839"/>
-              </div>
-              <ol className="messages">
-                <li className="message">:'(</li>
-              </ol>
-            </li>
-          </ol>
-        </div>
-        <form className="new-message-form">
-          <div className="new-message">
-            <input ref="message" type="text" placeholder="say something..."/>
-          </div>
-        </form>
-      </div>
-    )
-  }
+    getInitialState() {
+        return {
+            auth: null,
+            numberMessages: 0,
+            messages: []
+        }
+    },
+
+    componentDidMount() {
+        login((error,auth) => {
+            this.setState({ auth })
+            console.log(auth.github)
+            subscribeToMessages(messages => {
+                //we have messages
+                this.setState({ messages })
+            })
+        })
+    },
+
+    onSubmit(event) {
+        event.preventDefault()
+        console.log("submit");
+        const { auth } = this.state
+        const messageText = this.refs.message.value
+        if (messageText) {
+            sendMessage(auth.uid,auth.github.username, auth.github.profileImageURL, messageText)
+        }
+        this.refs.message.value = ""
+    },
+
+    render() {
+        const { auth, messages } = this.state
+
+        if (auth == null)
+            return <p>loading...</p>
+
+        const items = messages.map((message) => {
+            return <li key={message._key} className="message">{message.text}</li>
+        });
+
+        console.log(messages, items)
+
+        return (
+            <div className="chat">
+                <header className="chat-header">
+                    <h1 className="chat-title">HipReact</h1>
+                    <p className="chat-message-count"># messages: {messages.length}.  You are logged in as {auth.github.username}</p>
+                </header>
+                <div className="messages">
+                    <ol className = "messages">
+                        { items }
+                    </ol>
+                </div>
+                <form className="new-message-form" onSubmit={this.onSubmit}>
+                    <div className="new-message">
+                        <input ref="message" type="text" placeholder="say something..."/>
+                    </div>
+                </form>
+                <pre style={{height: '100px', overflow: 'scroll'}}>{JSON.stringify(this.state.messages, null, 2)}</pre>
+            </div>
+        )
+    }
+
 })
 
 render(<Chat/>, document.getElementById('app'))

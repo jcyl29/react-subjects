@@ -27,16 +27,40 @@ const Form = React.createClass({
 })
 
 const SubmitButton = React.createClass({
+
+  contextTypes: {
+    onSubmit: React.PropTypes.func,
+    onChange: React.PropTypes.func
+  },
+
   render() {
-    return <button>{this.props.children}</button>
+    return <button onClick={this.context.onSubmit}>{this.props.children}</button>
   }
 })
 
 const TextInput = React.createClass({
+
+  contextTypes: {
+    onSubmit: React.PropTypes.func
+  },
+
+    handleChange(event) {
+      if (this.context.onChange) {
+        this.context.onChange
+      }
+    },
+  handleKeyDown(event) {
+    if (event.key === 'Enter' || event.key === ' ')
+      this.context.onSubmit()
+  },
+
+
   render() {
     return (
       <input
         type="text"
+        onKeyDown={this.handleKeyDown}
+        onChange={this.handleChange}
         name={this.props.name}
         placeholder={this.props.placeholder}
       />
@@ -49,10 +73,42 @@ const App = React.createClass({
     alert('YOU WIN!')
   },
 
+  childContextTypes: {
+    onSubmit: React.PropTypes.func
+  },
+
+  getInitialState() {
+    return {
+      value: {}
+    }
+  },
+
+  getChildContext() {
+    return {
+      onSubmit: this.handleSubmit,
+      onChange: this.handleChange
+    }
+  },
+
+  handleChange(name, value) {
+    const nextState = {
+      ...this.state.values,
+      [name]: value
+    }
+
+    this.setState(nextState, () => {
+      if (this.prop.onChange) {
+        this.props.onChange(this.state)
+      }
+    })
+  },
+
+
   render() {
     return (
       <div>
         <h1>This isn't even my final <code>&lt;Form/&gt;</code>!</h1>
+
 
         <Form onSubmit={this.handleSubmit}>
           <p>

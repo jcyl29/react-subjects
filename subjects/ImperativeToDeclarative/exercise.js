@@ -24,7 +24,8 @@ const Modal = React.createClass({
 
         this.doImperativeWork();
 
-        //to handle when the user clicks outside the modal
+        // to handle when the user clicks outside the modal
+        //otherwise the state is wrong
         $(findDOMNode(this)).on('hidden.bs.modal', () => {
             if (this.props.onClose)
                 this.props.onClose()
@@ -77,7 +78,9 @@ const App = React.createClass({
     },
 
     closeModal() {
-        $(findDOMNode(this.refs.modal)).modal('hide')
+
+        this.setState({isModalOpen: false})
+        // $(findDOMNode(this.refs.modal)).modal('hide')
     },
 
     render() {
@@ -94,6 +97,12 @@ const App = React.createClass({
 
                 <Modal isOpen={this.state.isModalOpen}
                        onClose={() => this.setState({isModalOpen: false})}
+
+                      // alternative way to set the prop and the onClose method
+                       // onClose={this.closeModal}
+
+                      // this ref is imperative code, it serves as reference to other functions.
+                      // since we control the modal implementation via props, we do not need ref
                        ref="modal"
                        title="Declarative is better">
                     {/* all these things below are the props.children! */}

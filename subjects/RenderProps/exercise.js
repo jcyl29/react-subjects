@@ -17,21 +17,20 @@
 // - Make a <JSONP> component that fetches data with the jsonp package used in
 //   `utils/searchGitHubRepos` that uses a render prop to pass its data back up
 ////////////////////////////////////////////////////////////////////////////////
-import React from 'react'
+import React, { PropTypes } from 'react'
 import { render } from 'react-dom'
 import { listen } from './utils/log'
 
 const Tail = React.createClass({
+  propTypes: {
+    lines: PropTypes.arrayOf(PropTypes.string).isRequired,
+    n: PropTypes.number
+  },
   render() {
-    const { lines } = this.props
+    let { children, lines, n } = this.props
 
-    return (
-      <ul>
-        {lines.map((line, index) => (
-          <li key={index}>{line}</li>
-        ))}
-      </ul>
-    )
+    return children(lines.slice(-n))
+
   }
 })
 
@@ -55,7 +54,18 @@ const App = React.createClass({
       <div>
         <h1>Heads up Eggman, here comes <code>&lt;Tail&gt;</code>s!</h1>
         <div style={{ height: 400, overflowY: 'scroll', border: '1px solid' }}>
-          <Tail lines={this.state.lines}/>
+          <Tail n={5} lines={this.state.lines}>
+          {lines =>
+
+            <ul>
+              {lines.map((line, index) => (
+                <li key={index}>{line}</li>
+              ))}
+            </ul>
+          }
+
+
+          </Tail>
         </div>
       </div>
     )

@@ -27,8 +27,9 @@ const Tail = React.createClass({
     n: PropTypes.number
   },
   render() {
-    let { children, lines, n } = this.props
+    const { children, lines, n } = this.props
 
+    // get this rendering out of Tail and into App!
     return children(lines.slice(-n))
 
   }
@@ -56,15 +57,12 @@ const App = React.createClass({
         <div style={{ height: 400, overflowY: 'scroll', border: '1px solid' }}>
           <Tail n={5} lines={this.state.lines}>
           {lines =>
-
             <ul>
               {lines.map((line, index) => (
                 <li key={index}>{line}</li>
               ))}
             </ul>
           }
-
-
           </Tail>
         </div>
       </div>

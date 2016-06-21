@@ -26,7 +26,8 @@ const componentType = PropTypes.oneOfType([
   PropTypes.func
 ])
 
-const PinnedToBottom = React.createClass({
+const SmartPinnedToBottom = React.createClass({
+  // do not scroll if user scrolled back
   propTypes: {
     component: componentType.isRequired,
     tolerance: PropTypes.number.isRequired
@@ -55,6 +56,14 @@ const PinnedToBottom = React.createClass({
       this.scrollToBottom()
   },
 
+  handleScroll() {
+    const { scrollTop, scrollHeight, clientHeight } = findDOMNode(this)
+    const distanceToBottom = scrollHeight - (scrollTop + clientHeight);
+    this.autoScroll = distanceToBottom < 10
+    console.log('autoScroll?',this.autoScroll);
+  },
+
+
   scrollToBottom() {
     const node = findDOMNode(this)
     node.scrollTop = node.scrollHeight
@@ -64,6 +73,7 @@ const PinnedToBottom = React.createClass({
     const { children, component, style } = this.props
 
     return React.createElement(component, {
+      onScroll: this.handleScroll,
       style: { ...style, overflowY: 'scroll' },
       children
     })
@@ -108,8 +118,8 @@ const App = React.createClass({
       <div>
         <h1>Heads up Eggman, here comes <code>&lt;Tails&gt;</code>s!</h1>
         <div style={{ height: 400, overflowY: 'scroll', border: '1px solid' }}>
-        {/* <PinnedToBottom style={{ height: 400, border: '1px solid' }}> */}
-          <Tail lines={this.state.lines} n={5}>
+        <SmartPinnedToBottom style={{ height: 300, border: '1px solid' }}>
+          <Tail lines={this.state.lines} n={20}>
             {truncatedLines =>
               <ul>
                 {truncatedLines.map((line, index) => (
@@ -118,8 +128,9 @@ const App = React.createClass({
               </ul>
             }
           </Tail>
-        {/* </PinnedToBottom> */}
+        </SmartPinnedToBottom>
         </div>
+        <pre>{JSON.stringify(this.state, null, 2)}</pre>
       </div>
     )
   }

@@ -2,6 +2,11 @@ import React, { PropTypes } from 'react'
 import connect from '../mini-redux/connect'
 
 const App = React.createClass({
+  propTypes: {
+    dispatch: PropTypes.func.isRequired,
+    counter: PropTypes.number.isRequired
+  },
+  
   increment() {
     this.props.dispatch({ type: 'INCREMENT' })
   },
@@ -22,6 +27,8 @@ const App = React.createClass({
   }
 })
 
-export default connect((state) => {
+const AppWithProps = connect((state) => {
   return { counter: state }
 })(App)
+
+export default AppWithProps

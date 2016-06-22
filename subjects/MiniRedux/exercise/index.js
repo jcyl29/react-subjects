@@ -24,6 +24,7 @@ import Provider from './mini-redux/Provider'
 import App from './components/App'
 
 const store = createStore((state = 0, action) => {
+  console.log('action', action)
   if (action.type === 'INCREMENT') {
     return state + 1
   } else if (action.type === 'DECREMENT') {

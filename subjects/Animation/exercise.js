@@ -11,9 +11,9 @@
 // - Add a "drop hint" element that indicates which element will receive
 //   the marker when it is dropped to improve usability
 ////////////////////////////////////////////////////////////////////////////////
-import React, { PropTypes } from 'react'
-import { render, findDOMNode } from 'react-dom'
-import { Motion, spring } from 'react-motion'
+import React, {PropTypes} from 'react'
+import {render, findDOMNode} from 'react-dom'
+import {Motion, spring} from 'react-motion'
 import Draggable from './utils/Draggable'
 import './styles'
 
@@ -28,8 +28,8 @@ const DropGrid = React.createClass({
     }
   },
 
-  getRelativeXY({ clientX, clientY }) {
-    const { offsetLeft, offsetTop } = findDOMNode(this)
+  getRelativeXY({clientX, clientY}) {
+    const {offsetLeft, offsetTop} = findDOMNode(this)
 
     return {
       x: clientX - offsetLeft,
@@ -38,8 +38,8 @@ const DropGrid = React.createClass({
   },
 
   handleDragStart(event) {
-    const { x, y } = this.getRelativeXY(event)
-    const { offsetLeft, offsetTop } = event.target
+    const {x, y} = this.getRelativeXY(event)
+    const {offsetLeft, offsetTop} = event.target
 
     // Prevent Chrome from displaying a text cursor
     event.preventDefault()
@@ -54,7 +54,7 @@ const DropGrid = React.createClass({
   },
 
   handleDrag(event) {
-    const { x, y } = this.getRelativeXY(event)
+    const {x, y} = this.getRelativeXY(event)
 
     this.setState({
       mouseX: x,
@@ -63,11 +63,11 @@ const DropGrid = React.createClass({
   },
 
   handleDrop() {
-    this.setState({ isDraggingMarker: false })
+    this.setState({isDraggingMarker: false})
   },
 
   render() {
-    const { isDraggingMarker, startX, startY, mouseX, mouseY } = this.state
+    const {isDraggingMarker, startX, startY, mouseX, mouseY} = this.state
 
     let markerLeft, markerTop
     if (isDraggingMarker) {
@@ -78,20 +78,30 @@ const DropGrid = React.createClass({
       markerTop = Math.floor(Math.max(0, Math.min(449, mouseY)) / 150) * 150
     }
 
+    const bouncyStyle = (style) => spring(style, {stiffness: 200, damping: 10})
+
     const markerStyle = {
-      left: markerLeft,
-      top: markerTop
+      left: isDraggingMarker ? markerLeft : bouncyStyle(markerLeft),
+      top: isDraggingMarker ? markerTop : bouncyStyle(markerTop)
     }
 
     return (
       <div className="grid">
-        <Draggable
-          className="marker"
-          style={markerStyle}
-          onDragStart={this.handleDragStart}
-          onDrag={this.handleDrag}
-          onDrop={this.handleDrop}
-        />
+
+        <Motion style={markerStyle}>
+
+          {style =>
+            <Draggable
+              className="marker"
+              style={style}
+              onDragStart={this.handleDragStart}
+              onDrag={this.handleDrag}
+              onDrop={this.handleDrop}
+            />
+          }
+        </Motion>
+
+
         <div className="cell">1</div>
         <div className="cell">2</div>
         <div className="cell">3</div>
@@ -101,7 +111,11 @@ const DropGrid = React.createClass({
         <div className="cell">7</div>
         <div className="cell">8</div>
         <div className="cell">9</div>
+        <div>
+          <pre>{JSON.stringify(this.state, null, 2)}</pre>
+        </div>
       </div>
+
     )
   }
 })

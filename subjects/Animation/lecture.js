@@ -8,30 +8,63 @@ import './styles'
 // Let's create a simple toggle switch that moves back and forth.
 
 const ToggleSwitch = React.createClass({
-  getInitialState() {
-    return {
-      isActive: false
-    }
-  },
+ getInitialState() {
+   return {
+     isActive: false
+   }
+ },
 
-  toggle() {
-    this.setState({
-      isActive: !this.state.isActive
-    })
-  },
+ toggle() {
+   this.setState({
+     isActive: !this.state.isActive
+   })
+ },
 
-  render() {
-    const x = this.state.isActive ? 400 : 0
+ render() {
+   const x1 = this.state.isActive ? 400 : 0
+   const x2 = this.state.isActive ? 600 : 0
+   const x3 = this.state.isActive ? 300 : 0
 
-    return (
-      <div className="toggle-switch switch1" onClick={this.toggle}>
-        <div className="toggle-switch-knob" style={{ left: x }}/>
-      </div>
-    )
-  }
+   return (
+     <Motion style={{ x1: spring(x1), x2: spring(x2), x3: spring(x3) }}>
+       {style => (
+         <div>
+           <div className="toggle-switch switch1" onClick={this.toggle}>
+             <div
+               className="toggle-switch-knob"
+               style={{
+                 WebkitTransform: `translate3d(${style.x1}px, 0, 0)`,
+                 transform: `translate3d(${style.x1}px, 0, 0)`,
+               }}
+             />
+           </div>
+           <div className="toggle-switch switch2" onClick={this.toggle}>
+             <div
+               className="toggle-switch-knob"
+               style={{
+                 WebkitTransform: `translate3d(${style.x2}px, 0, 0)`,
+                 transform: `translate3d(${style.x2}px, 0, 0)`,
+               }}
+             />
+           </div>
+           <div className="toggle-switch switch3" onClick={this.toggle}>
+             <div
+               className="toggle-switch-knob"
+               style={{
+                 WebkitTransform: `translate3d(${style.x3}px, 0, 0)`,
+                 transform: `translate3d(${style.x3}px, 0, 0)`,
+               }}
+             />
+           </div>
+         </div>
+       )}
+     </Motion>
+   )
+ }
 })
 
 render(<ToggleSwitch/>, document.getElementById('app'))
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // We can integrate with other DOM animation libraries by doing imperative work

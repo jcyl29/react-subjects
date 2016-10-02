@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ////////////////////////////////////////////////////////////////////////////////
 // Exercise:
 //
@@ -14,9 +13,6 @@
 // - Create a filter that lets you filter messages in the chat by
 //   sender and/or content
 ////////////////////////////////////////////////////////////////////////////////
-=======
-
->>>>>>> my changes from the exercise
 import React from 'react'
 import { render } from 'react-dom'
 import { login, sendMessage, subscribeToMessages } from './utils/ChatUtils'

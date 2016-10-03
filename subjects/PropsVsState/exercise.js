@@ -85,7 +85,8 @@ const App = React.createClass({
     render() {
         return (
             <div>
-                <pre>{JSON.stringify(this.state, null, 2)}</pre>
+                <pre>STATE: {JSON.stringify(this.state, null, 2)}</pre>
+                <pre>PROPS: {JSON.stringify(this.props, null, 2)}</pre>
                 <h1>Props v. State</h1>
                 <Tabs ref="tabs"
                       activeTabIndex={this.state.activeTabIndex}
@@ -97,6 +98,7 @@ const App = React.createClass({
 
 })
 
+// "data" becomes the "props" of the App class
 render(<App tabs={data}/>, document.getElementById('app'), function () {
-    //require('./tests').run(this)
+    require('./tests').run(this)
 })

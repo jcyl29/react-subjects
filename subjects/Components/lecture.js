@@ -59,7 +59,7 @@ updateThePage()
 // Side note: Be careful to use the React.Children utility methods.
 // this.props.children is opaque!
 
-//class ContentToggle extends React.Component {
+// class ContentToggle extends React.Component {
 //  state = {
 //    isOpen: false
 //  }
@@ -81,7 +81,7 @@ updateThePage()
 //
 //    return (
 //      <div className="ContentToggle">
-//        <button onClick={this.handleClick} className={summaryClassName}>
+//        <button onClick={() => this.handleClick()} className={summaryClassName}>
 //          {this.props.title}
 //        </button>
 //        {this.state.isOpen && (
@@ -92,9 +92,9 @@ updateThePage()
 //      </div>
 //    )
 //  }
-//}
+// }
 //
-//class ToggleTracker extends React.Component {
+// class ToggleTracker extends React.Component {
 //  state = {
 //    numToggles: 0
 //  }
@@ -110,7 +110,7 @@ updateThePage()
 //
 //    children = React.Children.map(children, (child) => (
 //      React.cloneElement(child, {
-//        onToggle: this.handleToggle
+//        onToggle: () => this.handleToggle()
 //      })
 //    ))
 //
@@ -121,9 +121,9 @@ updateThePage()
 //      </div>
 //    )
 //  }
-//}
+// }
 //
-//ReactDOM.render((
+// ReactDOM.render((
 //  <ToggleTracker>
 //    <ContentToggle title="Tacos">
 //      <p>A taco is a traditional Mexican dish composed of a corn or wheat tortilla folded or rolled around a filling.</p>
@@ -132,4 +132,4 @@ updateThePage()
 //      <p>A burrito is a type of Mexican and Tex-Mex food, consisting of a wheat flour tortilla wrapped or folded into a cylindrical shape to completely enclose the filling (in contrast to a taco, which is generally formed by simply folding a tortilla in half around a filling, leaving the semicircular perimeter open).</p>
 //    </ContentToggle>
 //  </ToggleTracker>
-//), document.getElementById('app'))
+// ), document.getElementById('app'))

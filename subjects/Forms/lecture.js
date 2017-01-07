@@ -37,22 +37,29 @@ ReactDOM.render(<Forms/>, document.getElementById('app'))
 
 ////////////////////////////////////////////////////////////////////////////////
 // Access the value using event.target.
-//class Forms extends React.Component {
+// class Forms extends React.Component {
 //  handleChange = (event) => {
 //    console.log(event.target.value)
+//  }
+//
+//  handleSubmit = (event) => {
+//    event.preventDefault()
+//    console.log("on submit?", event.target)
 //  }
 //
 //  render() {
 //    return (
 //      <div>
 //        <h1>Forms</h1>
-//        <form>
+//        <form onSubmit={this.handleSubmit}>
 //          <input type="text" defaultValue="lol" onChange={this.handleChange}/>
 //        </form>
 //      </div>
 //    )
 //  }
-//}
+// }
+//
+// ReactDOM.render(<Forms/>, document.getElementById('app'))
 
 ////////////////////////////////////////////////////////////////////////////////
 // Or use a ref.
@@ -76,6 +83,24 @@ ReactDOM.render(<Forms/>, document.getElementById('app'))
 ////////////////////////////////////////////////////////////////////////////////
 // Or you can "control" the <input> and have its value in state.
 // What happens if we don't have an `onChange` but provide a value?
+
+// Answer: you will not be able to change the text value in the input element
+// From React documentation:
+// In the React rendering lifecycle, the value attribute on form elements
+// will override the value in the DOM. With an uncontrolled component, you
+// often want React to specify the initial value, but leave subsequent updates uncontrolled.
+// To handle this case, you can specify a defaultValue attribute instead of value.
+
+// A form element becomes “controlled” if you set its value via a prop.
+
+// if you have both a value and defaultValue and do not have the onChange handler, the browser
+// will complain with this message:
+//   Forms is changing an uncontrolled input of type text to be controlled.
+//   Input elements should not switch from uncontrolled to controlled (or vice versa).
+//   Decide between using a controlled or uncontrolled input element for the lifetime of the component.
+//     More info: https://fb.me/react-controlled-components
+
+
 //class Forms extends React.Component {
 //  state = {
 //    inputValue: 'lol'
@@ -107,7 +132,7 @@ ReactDOM.render(<Forms/>, document.getElementById('app'))
 
 ////////////////////////////////////////////////////////////////////////////////
 // When it's controlled, we can set state elsewhere and it stays in sync
-//class Forms extends React.Component {
+// class Forms extends React.Component {
 //  state = {
 //    inputValue: 'lol'
 //  }
@@ -122,8 +147,8 @@ ReactDOM.render(<Forms/>, document.getElementById('app'))
 //    return (
 //      <div>
 //        <h1>Forms</h1>
-//        <form>
-//          <button onClick={() => this.setState({ inputValue: 'changed!' })}>
+//        <form onSubmit={(e) => e.preventDefault()}>
+//          <button onClick={() => this.setState({ someInputValue: 'changed!' })}>
 //            Change the value
 //          </button>
 //          <input
@@ -137,7 +162,8 @@ ReactDOM.render(<Forms/>, document.getElementById('app'))
 //      </div>
 //    )
 //  }
-//}
+// }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Some forms are transactional, so modeling in state isn't necessary, just

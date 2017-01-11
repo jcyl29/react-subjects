@@ -29,29 +29,63 @@
 // - Arrow right, arrow down should select the next option
 // - Arrow left, arrow up should select the previous option
 ////////////////////////////////////////////////////////////////////////////////
-import React from 'react'
+import React, {PropTypes} from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 
 class RadioGroup extends React.Component {
   static propTypes = {
-    defaultValue: PropTypes.string
+    currentValue: PropTypes.string.isRequired
+  }
+
+  state = {
+    selectedValue: this.props.currentValue
+  }
+
+  select = (selectedValue) => {
+    console.log("select", "this.state.selectedValue", this.state.selectedValue, "selectedValue", selectedValue)
+    this.setState({selectedValue}, () => {
+      // onChange refers to an arrow function defined in <App/> as RadioGroup's prop,
+      // we are simply going to invoke it here
+      this.props.onChange(selectedValue)
+    })
+  }
+
+  componentWillReceiveProps(nextProps){
+    // synchronize currentValue to this.state.selectedValue
+
+    if (this.props.currentValue !== nextProps.currentValue) {
+      this.setState({selectedValue:nextProps.currentValue})
+    }
   }
 
   render() {
-    return <div>{this.props.children}</div>
+    // children are the RadioOption components
+    const children = React.Children.map(this.props.children, (child) => {
+      const props = {
+        isSelected: this.state.selectedValue === child.props.value,
+        onClick: () => this.select(child.props.value)
+      }
+      return React.cloneElement(child, props)
+    })
+    return (
+      <div>
+        {children}
+        <pre>RadioGroup State: {JSON.stringify(this.state, null, 2)}</pre>
+      </div>
+    )
   }
 }
 
 class RadioOption extends React.Component {
   static propTypes = {
-    value: PropTypes.string
+    value: PropTypes.string.isRequired
   }
 
   render() {
     return (
-      <div>
-        <RadioIcon isSelected={false}/> {this.props.children}
+      <div onClick={this.props.onClick}>
+        <RadioIcon isSelected={this.props.isSelected}/> {this.props.children}
       </div>
     )
   }
@@ -81,18 +115,28 @@ class RadioIcon extends React.Component {
 }
 
 class App extends React.Component {
+  state = {
+    radioValue: 'aux'
+  }
+
   render() {
     return (
       <div>
         <h1>♬ It's about time that we all turned off the radio ♫</h1>
+        <h2>Radio Value = {this.state.radioValue}</h2>
 
-        <RadioGroup defaultValue="fm">
+        <RadioGroup onChange={(newValue) => this.setState({radioValue: newValue})} currentValue={this.state.radioValue}>
           <RadioOption value="am">AM</RadioOption>
           <RadioOption value="fm">FM</RadioOption>
           <RadioOption value="tape">Tape</RadioOption>
           <RadioOption value="aux">Aux</RadioOption>
         </RadioGroup>
+        <button onClick={() => {(this.setState({radioValue:'tape'}))} }>Choose Tape</button>
+        <button onClick={() => {(this.setState({radioValue:'am'}))} }>Choose AM</button>
+
+        <pre>App State: {JSON.stringify(this.state, null, 2)}</pre>
       </div>
+
     )
   }
 }

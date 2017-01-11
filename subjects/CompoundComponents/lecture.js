@@ -260,7 +260,7 @@ ReactDOM.render(<App/>, document.getElementById('app'))
 // Feels weird ... whenever your options affect rendering, its a great
 // opportunity to create child components instead
 
-//class TabList extends React.Component {
+// class TabList extends React.Component {
 //  render() {
 //    const children = React.Children.map(this.props.children, (child, index) => {
 //      return React.cloneElement(child, {
@@ -271,9 +271,9 @@ ReactDOM.render(<App/>, document.getElementById('app'))
 //
 //    return <div style={styles.tabs}>{children}</div>
 //  }
-//}
+// }
 //
-//class Tab extends React.Component {
+// class Tab extends React.Component {
 //  render() {
 //    return (
 //      <div
@@ -286,9 +286,9 @@ ReactDOM.render(<App/>, document.getElementById('app'))
 //      </div>
 //    )
 //  }
-//}
+// }
 //
-//class TabPanels extends React.Component {
+// class TabPanels extends React.Component {
 //  render() {
 //    return (
 //      <div style={styles.tabPanels}>
@@ -296,15 +296,15 @@ ReactDOM.render(<App/>, document.getElementById('app'))
 //      </div>
 //    )
 //  }
-//}
+// }
 //
-//class TabPanel extends React.Component {
+// class TabPanel extends React.Component {
 //  render() {
 //    return <div>{this.props.children}</div>
 //  }
-//}
+// }
 //
-//class Tabs extends React.Component {
+// class Tabs extends React.Component {
 //  state = {
 //    activeIndex: 0
 //  }
@@ -327,7 +327,7 @@ ReactDOM.render(<App/>, document.getElementById('app'))
 //
 //    return <div>{children}</div>
 //  }
-//}
+// }
 //
 //class App extends React.Component {
 //  render() {
@@ -370,7 +370,76 @@ ReactDOM.render(<App/>, document.getElementById('app'))
 //
 // Oh but you really loved the old tabs yeah?
 
-//class DataTabs extends React.Component {
+// class TabList extends React.Component {
+//  render() {
+//    const children = React.Children.map(this.props.children, (child, index) => {
+//      return React.cloneElement(child, {
+//        isActive: index === this.props.activeIndex,
+//        onClick: () => this.props.onActivate(index)
+//      })
+//    })
+//
+//    return <div style={styles.tabs}>{children}</div>
+//  }
+// }
+//
+// class Tab extends React.Component {
+//  render() {
+//    return (
+//      <div
+//        onClick={this.props.isDisabled ? null : this.props.onClick}
+//        style={this.props.isDisabled ? styles.disabledTab : (
+//          this.props.isActive ? styles.activeTab : styles.tab
+//        )}
+//      >
+//        {this.props.children}
+//      </div>
+//    )
+//  }
+// }
+//
+// class TabPanels extends React.Component {
+//  render() {
+//    return (
+//      <div style={styles.tabPanels}>
+//        {this.props.children[this.props.activeIndex]}
+//      </div>
+//    )
+//  }
+// }
+//
+// class TabPanel extends React.Component {
+//  render() {
+//    return <div>{this.props.children}</div>
+//  }
+// }
+//
+// class Tabs extends React.Component {
+//  state = {
+//    activeIndex: 0
+//  }
+//
+//  render() {
+//    const children = React.Children.map(this.props.children, (child, index) => {
+//      if (child.type === TabPanels) {
+//        return React.cloneElement(child, {
+//          activeIndex: this.state.activeIndex
+//        })
+//      } else if (child.type === TabList) {
+//        return React.cloneElement(child, {
+//          activeIndex: this.state.activeIndex,
+//          onActivate: (activeIndex) => this.setState({ activeIndex })
+//        })
+//      } else {
+//        return child
+//      }
+//    })
+//
+//    return <div>{children}</div>
+//  }
+// }
+//
+// class DataTabs extends React.Component {
 //  static defaultProps = {
 //    disabled: []
 //  }
@@ -380,7 +449,7 @@ ReactDOM.render(<App/>, document.getElementById('app'))
 //      <Tabs>
 //        <TabList>
 //          {this.props.data.map((item, index) => (
-//            <Tab key={item.label} disabled={this.props.disabled.indexOf(index) !== -1}>
+//            <Tab key={item.label} isDisabled={this.props.disabled.indexOf(index) !== -1}>
 //              {item.label}
 //            </Tab>
 //          ))}
@@ -394,9 +463,9 @@ ReactDOM.render(<App/>, document.getElementById('app'))
 //      </Tabs>
 //    )
 //  }
-//}
+// }
 //
-//class App extends React.Component {
+// class App extends React.Component {
 //  render() {
 //    const tabData = [
 //      { label: 'Tacos',
@@ -412,13 +481,13 @@ ReactDOM.render(<App/>, document.getElementById('app'))
 //
 //    return (
 //      <div>
-//        <DataTabs data={tabData}/>
+//        <DataTabs data={tabData} disabled={[2]}/>
 //      </div>
 //    )
 //  }
-//}
+// }
 //
-//ReactDOM.render(<App/>, document.getElementById('app'))
+// ReactDOM.render(<App/>, document.getElementById('app'))
 
 ////////////////////////////////////////////////////////////////////////////////
 // Instead of creating a handful of options, compose several components together

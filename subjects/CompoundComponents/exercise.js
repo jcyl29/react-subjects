@@ -39,12 +39,13 @@ class RadioGroup extends React.Component {
   }
 
   state = {
-    selectedValue: this.props.currentValue
+    selectedValue: this.props.currentValue,
+    selectedIndex: -1
   }
 
-  select = (selectedValue) => {
+  select = (selectedValue, selectedIndex) => {
     console.log("select", "this.state.selectedValue", this.state.selectedValue, "selectedValue", selectedValue)
-    this.setState({selectedValue}, () => {
+    this.setState({selectedValue, selectedIndex}, () => {
       // onChange refers to an arrow function defined in <App/> as RadioGroup's prop,
       // we are simply going to invoke it here
       this.props.onChange(selectedValue)
@@ -60,11 +61,43 @@ class RadioGroup extends React.Component {
   }
 
   render() {
+    const keymap = {
+      SPACE: 32,
+      ENTER: 13, // 38 up, 40 down, 37 left 39 right
+      UP: 38,
+      LEFT: 37,
+      DOWN: 40,
+      RIGHT: 39
+    }
+
     // children are the RadioOption components
-    const children = React.Children.map(this.props.children, (child) => {
+    const children = React.Children.map(this.props.children, (child, index) => {
+      // console.log(this.props.children[index].props, index)
+      console.log("this.state.selectedValue",this.state.selectedValue,"child.props.value",child.props.value, index)
       const props = {
         isSelected: this.state.selectedValue === child.props.value,
-        onClick: () => this.select(child.props.value)
+        index: index,
+        onClick: () => this.select(child.props.value, index),
+        onKeyPress: (e) => {
+          const keyStroke = e.which
+
+          console.log(e.which, this.state.selectedValue, this.props.children);
+          if (keyStroke == keymap.SPACE || keyStroke == keymap.ENTER) {
+            this.select(child.props.value, index)
+          } else if (keyStroke == keymap.LEFT || keyStroke == keymap.UP) {
+            console.log("up", this.state.selectedIndex, this.props.children.length)
+            if (this.state.selectedIndex > 0) {
+              this.select(this.props.children[this.state.selectedIndex - 1].props.value, this.state.selectedIndex - 1)
+            }
+            // this.select(this.props.children[index - 1].props.value)
+          } else if (keyStroke == keymap.RIGHT || keyStroke == keymap.DOWN) {
+            console.log("down", this.state.selectedIndex, this.props.children.length)
+            if (this.state.selectedIndex + 1 < this.props.children.length) {
+              this.select(this.props.children[this.state.selectedIndex + 1].props.value, this.state.selectedIndex + 1)
+            }
+
+          }
+         }
       }
       return React.cloneElement(child, props)
     })
@@ -84,7 +117,7 @@ class RadioOption extends React.Component {
 
   render() {
     return (
-      <div onClick={this.props.onClick}>
+      <div onClick={this.props.onClick} onKeyDown={this.props.onKeyPress}>
         <RadioIcon isSelected={this.props.isSelected}/> {this.props.children}
       </div>
     )
@@ -99,6 +132,7 @@ class RadioIcon extends React.Component {
   render() {
     return (
       <div
+        tabIndex="0"
         style={{
           borderColor: '#ccc',
           borderWidth: 3,
@@ -116,7 +150,7 @@ class RadioIcon extends React.Component {
 
 class App extends React.Component {
   state = {
-    radioValue: 'aux'
+    radioValue: 'fm'
   }
 
   render() {

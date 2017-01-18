@@ -108,8 +108,8 @@ ReactDOM.render(<App/>, document.getElementById('app'))
 ////////////////////////////////////////////////////////////////////////////////
 // Wrapping <TabPanels> in a div breaks everything! Instead of using
 // cloneElement, let's use context.
-
-//class TabList extends React.Component {
+//
+// class TabList extends React.Component {
 //  render() {
 //    const children = React.Children.map(this.props.children, (child, index) => {
 //      return React.cloneElement(child, {
@@ -119,9 +119,9 @@ ReactDOM.render(<App/>, document.getElementById('app'))
 //    })
 //    return <div style={styles.tabs}>{children}</div>
 //  }
-//}
+// }
 //
-//class Tab extends React.Component {
+// class Tab extends React.Component {
 //  render() {
 //    return (
 //      <div
@@ -134,9 +134,9 @@ ReactDOM.render(<App/>, document.getElementById('app'))
 //      </div>
 //    )
 //  }
-//}
+// }
 //
-//class TabPanels extends React.Component {
+// class TabPanels extends React.Component {
 //  static contextTypes = {
 //    activeIndex: PropTypes.number
 //  }
@@ -148,15 +148,15 @@ ReactDOM.render(<App/>, document.getElementById('app'))
 //      </div>
 //    )
 //  }
-//}
+// }
 //
-//class TabPanel extends React.Component {
+// class TabPanel extends React.Component {
 //  render() {
 //    return <div>{this.props.children}</div>
 //  }
-//}
+// }
 //
-//class Tabs extends React.Component {
+// class Tabs extends React.Component {
 //  static childContextTypes = {
 //    activeIndex: PropTypes.number
 //  }
@@ -185,9 +185,9 @@ ReactDOM.render(<App/>, document.getElementById('app'))
 //
 //    return <div>{children}</div>
 //  }
-//}
+// }
 //
-//class App extends React.Component {
+// class App extends React.Component {
 //  render () {
 //    return (
 //      <div>
@@ -208,15 +208,15 @@ ReactDOM.render(<App/>, document.getElementById('app'))
 //      </div>
 //    )
 //  }
-//}
+// }
 //
-//ReactDOM.render(<App/>, document.getElementById('app'))
+// ReactDOM.render(<App/>, document.getElementById('app'))
 
 ////////////////////////////////////////////////////////////////////////////////
 // Wrapping <TabList> also breaks (no more active styles), lets check context
 // for isActive and the click handler instead of props.
 
-//class TabList extends React.Component {
+// class TabList extends React.Component {
 //  static contextTypes = {
 //    activeIndex: PropTypes.number,
 //    onActivate: PropTypes.func
@@ -232,9 +232,9 @@ ReactDOM.render(<App/>, document.getElementById('app'))
 //
 //    return <div style={styles.tabs}>{children}</div>
 //  }
-//}
+// }
 //
-//class Tab extends React.Component {
+// class Tab extends React.Component {
 //  render() {
 //    return (
 //      <div
@@ -247,9 +247,9 @@ ReactDOM.render(<App/>, document.getElementById('app'))
 //      </div>
 //    )
 //  }
-//}
+// }
 //
-//class TabPanels extends React.Component {
+// class TabPanels extends React.Component {
 //  static contextTypes = {
 //    activeIndex: PropTypes.number
 //  }
@@ -261,9 +261,16 @@ ReactDOM.render(<App/>, document.getElementById('app'))
 //      </div>
 //    )
 //  }
-//}
+// }
 //
-//class Tabs extends React.Component {
+// class TabPanel extends React.Component {
+//   render() {
+//     return <div>{this.props.children}</div>
+//   }
+// }
+//
+//
+// class Tabs extends React.Component {
 //  static childContextTypes = {
 //    activeIndex: PropTypes.number,
 //    onActivate: PropTypes.func
@@ -285,16 +292,16 @@ ReactDOM.render(<App/>, document.getElementById('app'))
 //  render() {
 //    return <div>{this.props.children}</div>
 //  }
-//}
+// }
 //
-//class App extends React.Component {
+// class App extends React.Component {
 //  render() {
 //    return (
 //      <div>
 //        <Tabs>
 //          <div>
 //            <TabList>
-//              <Tab>Tacos</Tab>
+//              <Tab><b>Tacos</b></Tab>
 //              <Tab isDisabled>Burritos</Tab>
 //              <Tab>Coconut Korma</Tab>
 //            </TabList>
@@ -310,6 +317,6 @@ ReactDOM.render(<App/>, document.getElementById('app'))
 //      </div>
 //    )
 //  }
-//}
+// }
 //
-//ReactDOM.render(<App/>, document.getElementById('app'))
+// ReactDOM.render(<App/>, document.getElementById('app'))
